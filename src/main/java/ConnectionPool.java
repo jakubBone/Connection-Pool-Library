@@ -37,7 +37,7 @@ public class ConnectionPool {
             log.error("Failed to check if connection is closed", ex.getMessage());
         }
 
-        if (pool < MAX_CONNECTION) {
+        if (pool.size() < MAX_CONNECTION) {
             Connection newConnection = new DatabaseConnection();
             pool.add(newConnection);
             return newConnection;
@@ -60,7 +60,7 @@ public class ConnectionPool {
     private void collapseInactiveConnection() throws SQLException{
         try{
             for (Connection conn: pool) {
-                if (conn.isClosed() && pool.size() > 100) {
+                if (conn.isClosed() && pool.size() > MAX_CONNECTION) {
                     pool.remove(conn);
                 }
             }
