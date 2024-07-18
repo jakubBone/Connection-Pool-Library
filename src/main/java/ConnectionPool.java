@@ -1,0 +1,2 @@
+public class ConnectionPool {
+}
