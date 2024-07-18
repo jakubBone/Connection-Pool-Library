@@ -2,6 +2,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -53,10 +57,7 @@ public class ConnectionPool {
         }
     }
 
-    private synchronized void collapseInactiveConnection() throws SQLException{
-
-    // Add 1-minute check interval
-
+    private void collapseInactiveConnection() throws SQLException{
         try{
             for (Connection conn: pool) {
                 if (conn.isClosed() && pool.size() > 100) {
@@ -66,5 +67,16 @@ public class ConnectionPool {
         } catch (SQLException ex){
             log.error("Failed to check if connection is closed", ex.getMessage());
         }
+    }
+
+    private synchronized void scheduleConnectionCollapse() throws Exception{
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.schedule(() -> {
+            try {
+                collapseInactiveConnection();
+            } catch (Exception ex) {
+                log.error("Failed to collapse inactive connections", ex.getMessage());
+            }
+        }, 60000, TimeUnit.MILLISECONDS);
     }
 }
