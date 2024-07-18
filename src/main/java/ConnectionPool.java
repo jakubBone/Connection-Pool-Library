@@ -77,6 +77,6 @@ public class ConnectionPool {
             } catch (Exception ex) {
                 log.error("Failed to collapse inactive connections", ex.getMessage());
             }
-        }, 60000, TimeUnit.MILLISECONDS);
+        }, 1, TimeUnit.MINUTES);
     }
 }
