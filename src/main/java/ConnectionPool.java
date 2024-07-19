@@ -10,23 +10,24 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class ConnectionPool {
-
-    private final int MIN_CONNECTION = 10;
-    private final int MAX_CONNECTION = 100;
+    private final int minPoolSize;
+    private final int maxPoolSize;
     private List<Connection> pool;
 
-    public ConnectionPool() {
+    public ConnectionPool(int minPoolSize, int maxPoolSize) {
+        this.minPoolSize = minPoolSize;
+        this.maxPoolSize = maxPoolSize;
         this.pool = new ArrayList<>();
-        createPool();
+        initPool();
     }
 
-    private void createPool() {
-        for (int i = 0; i < MIN_CONNECTION; i++) {
-            pool.add(new DatabaseConnection().getConnection())
+    public void initPool() {
+        for (int i = 0; i < minPoolSize; i++) {
+            pool.add(new DatabaseConnection().getConnection());
         }
     }
 
-    private synchronized Connection getActiveConnection() throws SQLException {
+    public synchronized Connection getConnection() throws SQLException {
         try {
             for (Connection conn : pool) {
                 if (!conn.isClosed()) {
@@ -34,11 +35,11 @@ public class ConnectionPool {
                 }
             }
         } catch (SQLException ex) {
-            log.error("Failed to check if connection is closed", ex.getMessage());
+            log.error("Failed to check if connection is closed: {}", ex.getMessage());
         }
 
-        if (pool.size() < MAX_CONNECTION) {
-            Connection newConnection = new DatabaseConnection();
+        if (pool.size() < maxPoolSize) {
+            Connection newConnection = new DatabaseConnection().getConnection();
             pool.add(newConnection);
             return newConnection;
         } else {
@@ -46,36 +47,36 @@ public class ConnectionPool {
         }
     }
 
-    private synchronized void returnConnectionToPool(Connection connection) throws SQLException {
+    public synchronized void releaseConnection(Connection connection) throws SQLException {
         try {
             if (!connection.isClosed()) {
                 pool.add(connection);
             }
         } catch (SQLException ex) {
-            log.error("Failed to check if connection is closed", ex.getMessage());
+            log.error("Failed to check if connection is closed: {}", ex.getMessage());
             connection.close();
         }
     }
 
-    private void collapseInactiveConnection() throws SQLException{
+    public void removeConnection() throws SQLException {
         try{
             for (Connection conn: pool) {
-                if (conn.isClosed() && pool.size() > MAX_CONNECTION) {
+                if (conn.isClosed() && pool.size() > minPoolSize) {
                     pool.remove(conn);
                 }
             }
         } catch (SQLException ex){
-            log.error("Failed to check if connection is closed", ex.getMessage());
+            log.error("Failed to check if connection is closed: {}", ex.getMessage());
         }
     }
 
-    private synchronized void scheduleConnectionCollapse() throws Exception{
+    public synchronized void scheduleConnectionRemoval() throws Exception {
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.schedule(() -> {
             try {
-                collapseInactiveConnection();
+                removeConnection();
             } catch (Exception ex) {
-                log.error("Failed to collapse inactive connections", ex.getMessage());
+                log.error("Failed to remove connection: {}", ex.getMessage());
             }
         }, 1, TimeUnit.MINUTES);
     }
