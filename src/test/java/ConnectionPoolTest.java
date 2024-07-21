@@ -1,14 +1,11 @@
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 
 class ConnectionPoolTest {
+    ConnectionPool connectionPool;
 
-    @Test
-    @DisplayName("Stress test for connection pool under maximum load")
-    void poolConnectionStressTest() {
-        int minPoolSize = 10;
-        int maxPoolSize = 100;
-        ConnectionPool pool = new ConnectionPool(minPoolSize, maxPoolSize);
+    @BeforeEach
+    void setUp(){
+        connectionPool = new ConnectionPool(10, 100);
     }
 }

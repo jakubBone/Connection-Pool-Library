@@ -11,18 +11,10 @@ public class DatabaseConnection {
     private final String DATABASE = "connection_db";
     private final int PORT_NUMBER = 5432;
     private final String URL = String.format("jdbc:postgresql://localhost:%d/%s", PORT_NUMBER, DATABASE);
-    private static DatabaseConnection instance;
     private static Connection connection;
 
     public DatabaseConnection() {
         startConnection();
-    }
-
-    public static synchronized DatabaseConnection getInstance() {
-        if (instance == null) {
-            instance = new DatabaseConnection();
-        }
-        return instance;
     }
 
     public void startConnection() {
