@@ -2,9 +2,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
+@Setter
 public class DatabaseConnection {
     private final String USER = "jakub_bone";
     private final String PASSWORD = "password123";
@@ -28,7 +30,6 @@ public class DatabaseConnection {
             }
         } catch (SQLException ex) {
             log.error("Error during database connection: {}", ex.getMessage());
-
         }
     }
 

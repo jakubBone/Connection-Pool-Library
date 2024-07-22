@@ -21,19 +21,15 @@ public class ConnectionPoolTester {
                     try {
                         // Connection getting
                         Connection connection = connectionPool.getConnection();
-                        System.out.println(Thread.currentThread().getName() + " got a connection from the pool");
 
                         // Work simulation
                         Thread.sleep(100);
-                        System.out.println(Thread.currentThread().getName() + " is working");
 
                         // Connection releasing
                         connectionPool.releaseConnection(connection);
-                        System.out.println(Thread.currentThread().getName() + " released a connection to the pool");
+
                     } catch (SQLException | InterruptedException ex) {
-                        System.out.println(ex);
-                        Thread.currentThread().interrupt(); // handle interruption
-                        break;
+                        Thread.currentThread().interrupt();
                     }
                 }
             };
@@ -43,7 +39,7 @@ public class ConnectionPoolTester {
             }
 
             executor.shutdown();
-            if (!executor.awaitTermination(testDurationInSeconds + 10, TimeUnit.SECONDS)) {
+            if (!executor.awaitTermination(10, TimeUnit.SECONDS)) {
                 executor.shutdownNow();
             }
         } catch (InterruptedException ex){
