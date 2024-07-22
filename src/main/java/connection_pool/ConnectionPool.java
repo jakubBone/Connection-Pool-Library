@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import database.DatabaseConnection;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
@@ -23,7 +24,6 @@ public class ConnectionPool {
     private Semaphore semaphore;
     private Lock lock;
     private ScheduledExecutorService scheduler;
-
 
     public ConnectionPool(int minPoolSize, int maxPoolSize) {
         this.minPoolSize = minPoolSize;

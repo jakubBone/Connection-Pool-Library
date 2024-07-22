@@ -10,7 +10,7 @@ public class ConnectionPoolTester {
     private static final int MIN_POOL_SIZE = 10;
     private static final int MAX_POOL_SIZE = 100;
     private static final int NUMBER_OF_THREADS = 200;
-    private static final long TEST_DURATION_IN_SECONDS = 120;
+    private static final long TEST_DURATION_IN_SECONDS = 30;
 
     public static void main(String[] args) {
         System.out.println("\n======== TEST START ========\n");
