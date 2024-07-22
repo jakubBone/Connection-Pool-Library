@@ -1,3 +1,5 @@
+package connection_pool;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -77,11 +79,11 @@ public class ConnectionPool {
     public void releaseConnection(Connection conn) throws SQLException {
         lock.lock();
         try {
-            if (conn != null && !conn.isClosed()) {
+            if (!conn.isClosed()) {
                 pool.add(conn);
                 System.out.println(Thread.currentThread() + " returned the connection to the POOL");
                 semaphore.release();
-            } else if (conn.isClosed()) {
+            } else {
                 pool.remove(conn);
                 System.out.println("Connection with error removed from POOL");
                 if (pool.size() < minPoolSize) {
@@ -100,23 +102,24 @@ public class ConnectionPool {
     }
 
     public void startCleanupScheduler()  {
+        System.out.println("Scheduler started");
         scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.schedule(() -> {
+        scheduler.scheduleAtFixedRate(() -> {
             try {
-                removeClosedConnection();
+                removeIdleConnection();
             } catch (Exception ex) {
-                System.out.println("Failed to remove connection");
+                System.out.println("Failed to remove connection: " + ex.getMessage());
             }
-        }, 1, TimeUnit.MINUTES);
+        }, 0, 1, TimeUnit.MINUTES);
     }
 
-    public void removeClosedConnection() throws SQLException {
+    public void removeIdleConnection() throws SQLException {
         lock.lock();
-        try{
+        try {
             for (Connection conn: pool) {
                 if (conn.isClosed() && pool.size() > minPoolSize) {
                     pool.remove(conn);
-                    System.out.println(Thread.currentThread() + " removed the useless connection from POOL");
+                    System.out.println(Thread.currentThread() + " removed the idle connection from POOL");
                 }
             }
         } finally {
@@ -128,7 +131,7 @@ public class ConnectionPool {
         if (scheduler != null && !scheduler.isShutdown()) {
             scheduler.shutdown();
             try {
-                if (!scheduler.awaitTermination(1, TimeUnit.SECONDS)) {
+                if (!scheduler.awaitTermination(10, TimeUnit.SECONDS)) {
                     scheduler.shutdownNow();
                 }
             } catch (InterruptedException ex) {

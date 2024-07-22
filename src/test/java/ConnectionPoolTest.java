@@ -1,4 +1,5 @@
 
+import connection_pool.ConnectionPool;
 import org.junit.jupiter.api.BeforeEach;
 
 class ConnectionPoolTest {
