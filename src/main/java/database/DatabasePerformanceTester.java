@@ -64,7 +64,7 @@ public class DatabasePerformanceTester {
     public static void main(String[] args) throws SQLException{
         DatabasePerformanceTester tester = new DatabasePerformanceTester();
         String query = "INSERT INTO test_table (IP, STATUS) VALUES ('127.0.0.1', 'active');";
-        String query = "DELETE FROM test_table";
+        //String query = "DELETE FROM test_table";
         tester.executeTestWithSimpleConnections(query);
         tester.executeTestWithMultipleConnections(query);
 

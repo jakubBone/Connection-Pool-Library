@@ -8,6 +8,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * The ConnectionPoolTester class is designed to test the performance and stability of the connection pool.
+ * Its primary purpose is to simulate a large number of concurrent database operations using a specified number
+ * of connections from the pool.
+ *
+ * This class demonstrates the ability of the connection pool to handle simultaneous queries and manage
+ * connection availability and performance.
+ */
+
 public class ConnectionPoolTester {
     private static final int MIN_POOL_SIZE = 10;
     private static final int MAX_POOL_SIZE = 100;
