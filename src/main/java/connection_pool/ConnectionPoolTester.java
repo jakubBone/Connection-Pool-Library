@@ -1,5 +1,7 @@
 package connection_pool;
 
+import database.DatabasePerformanceTester;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.concurrent.ExecutorService;
@@ -38,16 +40,18 @@ public class ConnectionPoolTester {
         private Runnable createTask(ConnectionPool connectionPool) {
             return () -> {
                 long endTime = System.currentTimeMillis() + TEST_DURATION_IN_SECONDS * 1000;
+                DatabasePerformanceTester tester = new DatabasePerformanceTester();
+                String query = "INSERT INTO test_table (IP, STATUS) VALUES ('127.0.0.1', 'active');";
                 while (System.currentTimeMillis() < endTime) {
                     Connection connection = null;
                     try {
                         // CONNECTION GETTING
                         connection = connectionPool.getConnection();
-                        // metoda (connection) // wykonuje jakąś 1 operację
-                        // WORK SIMULATION
+
+                        // WORKING
                         System.out.println(Thread.currentThread() + " is working");
-                        Thread.sleep(100);
-                    } catch (SQLException | InterruptedException ex) {
+                        tester.updateTable(connection, query);
+                    } catch (SQLException ex) {
                         System.out.println("Exception: " + ex.getMessage());
                         Thread.currentThread().interrupt();
                     } finally {
