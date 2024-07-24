@@ -43,7 +43,7 @@ public class ConnectionPoolTester {
                     try {
                         // CONNECTION GETTING
                         connection = connectionPool.getConnection();
-
+                        // metoda (connection) // wykonuje jakąś 1 operację
                         // WORK SIMULATION
                         System.out.println(Thread.currentThread() + " is working");
                         Thread.sleep(100);
