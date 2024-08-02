@@ -56,6 +56,7 @@ public class ConnectionPool {
                 for (Connection conn: pool) {
                     if (!conn.isClosed()) {
                         pool.remove(conn);
+                        System.out.println("Czy poola zawiera usunięty connection?????????????? " + pool.contains(conn));
                         System.out.println(Thread.currentThread() + " got a connection from the POOL");
                         return conn;
                     }

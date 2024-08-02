@@ -1,3 +1,5 @@
+package database;
+
 import database.DatabaseConnection;
 import org.junit.jupiter.api.*;
 
