@@ -1,4 +1,4 @@
-package database;
+package unit_test;
 
 import database.DatabaseConnection;
 import org.junit.jupiter.api.*;

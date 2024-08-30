@@ -1,5 +1,6 @@
-package connection_pool;
+package unit_test;
 
+import connection_pool.ConnectionPool;
 import org.junit.jupiter.api.*;
 
 import java.sql.Connection;
