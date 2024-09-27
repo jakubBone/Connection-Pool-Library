@@ -9,11 +9,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ConnectionPoolTest {
-
-    static ConnectionPool pool;
-    final int minPoolSize = 10;
-    final int maxPoolSize = 100;
+class ConnectionPoolUnitTest {
+    ConnectionPool pool;
+    int minPoolSize = 10;
+    int maxPoolSize = 100;
 
     @BeforeEach
     void setUp(){

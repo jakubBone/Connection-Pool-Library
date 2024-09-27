@@ -29,12 +29,12 @@ public class ConnectionPool {
         this.minPoolSize = minPoolSize;
         this.maxPoolSize = maxPoolSize;
         this.pool = new ArrayList<>();
-        semaphore = new Semaphore(maxPoolSize, true);
-        lock = new ReentrantLock();
+        this.semaphore = new Semaphore(maxPoolSize, true);
+        this.lock = new ReentrantLock();
         initPool();
     }
 
-    public void initPool()  {
+    private void initPool()  {
         lock.lock();
         try {
             for (int i = 0; i < minPoolSize; i++) {
@@ -113,7 +113,7 @@ public class ConnectionPool {
         }, 0, 1, TimeUnit.MINUTES);
     }
 
-    public void removeIdleConnection() throws SQLException {
+    private void removeIdleConnection() throws SQLException {
         lock.lock();
         try {
             for (Connection conn: pool) {

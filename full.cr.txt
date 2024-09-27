@@ -150,7 +150,7 @@ FILE: ConnectionPoolTester.java
 
 package connection_pool;
 
-import database.DatabasePerformanceTester;
+import performance_test.DatabasePerformanceTest;
 
 import java.sql.Connection;
 import java.sql.SQLException;

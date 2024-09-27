@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class DatabaseConnectionTest {
+class DatabaseConnectionUnitTest {
     static DatabaseConnection databaseConnection;
     Connection connection;
     @BeforeEach
