@@ -9,12 +9,7 @@ The project is divided into several key components:
 
 ConnectionPool: Manages database connections, maintaining a minimum and maximum number of connections in the pool.
 
-ConnectionPoolTester: Tests the performance and stability of the connection pool by simulating a large number of parallel operations.
-
 DatabaseConnection: Facilitates establishing connections to the database.
-
-DatabasePerformanceTester: Measures and compares the execution time of running queries with different connection strategies.
-
 
 
 ## Project Overview
@@ -30,6 +25,14 @@ Error Handling: Handles connection errors by removing faulty connections and rep
 Idle Connection Management: Regularly checks and removes idle connections that exceed the minimum pool size, freeing up resources.
 
 Concurrency Control: Utilizes semaphores and locks to ensure thread-safe access to connections.
+
+
+## Testing
+The project includes unit and performance tests to validate functionality and efficiency:
+
+Unit Tests: Verify basic operations of ConnectionPool and DatabaseConnection.
+
+Performance Tests: Test stability and performance under load using multiple connection strategies.
 
 
 ## How to Run
