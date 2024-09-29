@@ -8,12 +8,19 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class DatabaseConnection {
-    private final String USER = "user_manager";
-    private final String PASSWORD = "user123";
-    private final String DATABASE = "user_db";
-    private final int PORT_NUMBER = 5432;
-    private final String URL = String.format("jdbc:postgresql://localhost:%d/%s", PORT_NUMBER, DATABASE);
+    private String USER;
+    private String PASSWORD;
+    private String DATABASE;
+    private  int PORT_NUMBER;
+    private  String URL;
     private static Connection connection;
+    public DatabaseConnection(String USER, String PASSWORD, String DATABASE, int PORT_NUMBER) {
+        this.USER = USER;
+        this.PASSWORD = PASSWORD;
+        this.DATABASE = DATABASE;
+        this.PORT_NUMBER = PORT_NUMBER;
+        this.URL = String.format("jdbc:postgresql://localhost:%d/%s", PORT_NUMBER, DATABASE);;
+    }
 
     public Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
