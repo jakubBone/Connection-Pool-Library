@@ -1,6 +1,6 @@
 # Connection-Pool Library
 
-Welcome to my Connection Pool Library. This project demonstrates my own implementation of a database connection pool in Java. 
+Welcome to my Connection Pool Library. This project demonstrates my own implementation of a database connection pool in Java.
 The connection pool manages multiple database connections, optimizing their usage and improving application performance.
 
 
@@ -15,7 +15,7 @@ DatabaseConnection: Facilitates establishing connections to the database.
 
 
 ## Project Overview
-The library provides a robust mechanism for managing database connections, ensuring efficient use of resources and maintaining optimal performance. 
+The library provides a robust mechanism for managing database connections, ensuring efficient use of resources and maintaining optimal performance.
 Key features include:
 
 Connection Initialization: Initializes a pool of database connections at application startup.
@@ -31,16 +31,6 @@ Concurrency Control: Utilizes semaphores and locks to ensure thread-safe access 
 
 ## Testing
 The project includes unit and performance tests to validate functionality and efficiency:
-<<<<<<< HEAD
-=======
-
-Unit Tests: Verify basic operations of ConnectionPool and DatabaseConnection.
-
-Performance Tests: Test stability and performance under load using multiple connection strategies.
-
-
-## How to Run
->>>>>>> ee4428fb2fd998afa0c6441dbf62dd1acdf121cd
 
 Unit Tests: Verify basic operations of ConnectionPool and DatabaseConnection.
 
@@ -76,13 +66,4 @@ PostgreSQL Database for testing and running the application.
 
 Log4j2 for logging application behavior.
 
-<<<<<<< HEAD
 JUnit for unit testing.
-=======
-## Additional Information
-PostgreSQL: Database used for storing connection information.
-
-Log4j2: Logging framework for tracking application behavior.
-
-JUnit: Library used for unit testing.
->>>>>>> ee4428fb2fd998afa0c6441dbf62dd1acdf121cd
