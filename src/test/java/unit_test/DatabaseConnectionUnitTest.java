@@ -10,29 +10,29 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class DatabaseConnectionUnitTest {
-    static DatabaseConnection databaseConnection;
+    static DatabaseConnection dbConnection;
     Connection connection;
     @BeforeEach
     void setUp(){
-       databaseConnection = new DatabaseConnection();
+        dbConnection = new DatabaseConnection("user_manager", "user123", "user_db", 5432);
     }
 
     @AfterAll
     static void closeDown() {
-        databaseConnection.disconnect();
+        dbConnection.disconnect();
     }
 
     @Test
     @DisplayName("Should test data base connection return")
     void testGetConnection() throws SQLException {
-        connection = databaseConnection.getConnection();
+        connection = dbConnection.getConnection();
 
         assertNotNull(connection);
     }
     @Test
     @DisplayName("Should test if is data base connection opened")
     void testIsConnectionOpened() throws SQLException {
-        connection = databaseConnection.getConnection();
+        connection = dbConnection.getConnection();
 
         assertFalse(connection.isClosed());
     }

@@ -45,9 +45,9 @@ class DatabasePerformanceTest {
 
         for (int i = 0; i < operationNumber; i++) {
             try {
-                DatabaseConnection conn = new DatabaseConnection();
-                updateTable(conn.getConnection(), query);
-                conn.disconnect();
+                DatabaseConnection dbConnection = new DatabaseConnection("user_manager", "user123", "user_db", 5432);
+                updateTable(dbConnection.getConnection(), query);
+                dbConnection.disconnect();
             } catch (SQLException e) {
                 e.printStackTrace();
 
@@ -60,16 +60,16 @@ class DatabasePerformanceTest {
     // Executes the test with a single connection for all operations
     long executeTestWithMultipleConnections(String query)  {
         long start = System.currentTimeMillis();
-        DatabaseConnection conn = new DatabaseConnection();
+        DatabaseConnection dbConnection = new DatabaseConnection("user_manager", "user123", "user_db", 5432);
 
         for (int i = 0; i < operationNumber; i++) {
              try {
-                 updateTable(conn.getConnection(), query);
+                 updateTable(dbConnection.getConnection(), query);
              } catch (SQLException e){
                  e.printStackTrace();
              }
         }
-        conn.disconnect();
+        dbConnection.disconnect();
 
         long stop = System.currentTimeMillis();
         return stop - start;

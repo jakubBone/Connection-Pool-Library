@@ -1,6 +1,7 @@
 package performance_test;
 
 import connection_pool.ConnectionPool;
+import database.DatabaseConnection;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,10 +31,12 @@ class ConnectionPoolPerformanceTest {
     int threadsNumber = 200;
     long testDurationInSeconds = 30;
     ConnectionPool connectionPool;
+    DatabaseConnection dbConnection;
 
     @BeforeEach
     void setUp() {
-        connectionPool = new ConnectionPool(minPoolSize, maxPoolSize);
+        dbConnection = new DatabaseConnection("user_manager", "user123", "user_db", 5432);
+        connectionPool = new ConnectionPool(minPoolSize, maxPoolSize, dbConnection);
         connectionPool.startCleanupScheduler();
     }
 

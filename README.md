@@ -7,14 +7,11 @@ The connection pool manages multiple database connections, optimizing their usag
 ## Project Structure
 The project is divided into several key components:
 
+The project is divided into several key components:
+
 ConnectionPool: Manages database connections, maintaining a minimum and maximum number of connections in the pool.
 
-ConnectionPoolTester: Tests the performance and stability of the connection pool by simulating a large number of parallel operations.
-
 DatabaseConnection: Facilitates establishing connections to the database.
-
-DatabasePerformanceTester: Measures and compares the execution time of running queries with different connection strategies.
-
 
 
 ## Project Overview
@@ -32,28 +29,41 @@ Idle Connection Management: Regularly checks and removes idle connections that e
 Concurrency Control: Utilizes semaphores and locks to ensure thread-safe access to connections.
 
 
-## How to Run
+## Testing
+The project includes unit and performance tests to validate functionality and efficiency:
 
-To run the Connection Pool library, ensure you have the Java Development Kit (JDK) installed on your system. 
-Follow these steps:
+Unit Tests: Verify basic operations of ConnectionPool and DatabaseConnection.
 
-### Clone this repository to your computer:
-<https://github.com/jakubBone/Connection-Pool>
+Performance Tests: Test stability and performance under load using multiple connection strategies.
 
-### Navigate to the project directory
 
-### Compile and run the ConnectionPoolTester
+## How to Use
 
+### Step 1: Set Up the Database Connection:
+Before using the ConnectionPool, create an instance of the DatabaseConnection class by providing your database credentials:
+> DatabaseConnection dbConnection = new DatabaseConnection("username", "password", "database_name", port_number);
+
+### Step 2: Create a Connection Pool:
+Initialize ConnectionPool by specifying the minimum and maximum number of connections and passing the DatabaseConnection instance.
+
+### Step 3: Acquire and Use a Connection:
+Use getConnection() to retrieve a connection, then perform your database operations.
+
+### Step 4: Release the Connection:
+Call releaseConnection() to return the connection back to the pool.
+
+### Step 5: Start and Stop Scheduler (Optional):
+Use startCleanupScheduler() to manage idle connections, and stopCleanupScheduler() to gracefully stop it.
+
+### Step 6: Disconnect
+When finished, call disconnect() on the DatabaseConnection instance.
 
 
 ## Requirements
-To compile and run the application, you'll need Java Development Kit (JDK) and PostgreSQL database
+Java Development Kit (JDK) for compiling and running the application.
 
+PostgreSQL Database for testing and running the application.
 
+Log4j2 for logging application behavior.
 
-## Additional Information
-PostgreSQL: Database used for storing connection information.
-
-Log4j2: Logging framework for tracking application behavior.
-
-JUnit: Library used for unit testing.
+JUnit for unit testing.

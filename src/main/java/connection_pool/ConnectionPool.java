@@ -24,13 +24,15 @@ public class ConnectionPool {
     private Semaphore semaphore;
     private Lock lock;
     private ScheduledExecutorService scheduler;
+    private DatabaseConnection dbConnection;
 
-    public ConnectionPool(int minPoolSize, int maxPoolSize) {
+    public ConnectionPool(int minPoolSize, int maxPoolSize, DatabaseConnection dbConnection) {
         this.minPoolSize = minPoolSize;
         this.maxPoolSize = maxPoolSize;
         this.pool = new ArrayList<>();
         this.semaphore = new Semaphore(maxPoolSize, true);
         this.lock = new ReentrantLock();
+        this.dbConnection = dbConnection;
         initPool();
     }
 
@@ -38,7 +40,7 @@ public class ConnectionPool {
         lock.lock();
         try {
             for (int i = 0; i < minPoolSize; i++) {
-                pool.add(new DatabaseConnection().getConnection());
+                pool.add(dbConnection.getConnection());
                 System.out.println("A new connection added to POOL");
             }
         } catch (SQLException ex) {
@@ -61,7 +63,7 @@ public class ConnectionPool {
                     }
                 }
                 if (pool.size() < maxPoolSize) {
-                    Connection newConn = new DatabaseConnection().getConnection();
+                    Connection newConn = dbConnection.getConnection();
                     pool.add(newConn);
                     System.out.println(Thread.currentThread() + " added a new connection from the POOL");
                     return newConn;
@@ -87,14 +89,14 @@ public class ConnectionPool {
                 pool.remove(conn);
                 System.out.println("Connection with error removed from POOL");
                 if (pool.size() < minPoolSize) {
-                    pool.add(new DatabaseConnection().getConnection());
+                    pool.add(dbConnection.getConnection());
                 }
             }
         } catch (SQLException ex) {
             pool.remove(conn);
             System.out.println("Connection with error removed from POOL");
             if (pool.size() < minPoolSize) {
-                pool.add(new DatabaseConnection().getConnection());
+                pool.add(dbConnection.getConnection());
             }
         } finally {
             lock.unlock();
