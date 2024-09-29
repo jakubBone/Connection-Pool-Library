@@ -1,7 +1,9 @@
 # Connection-Pool Library
 
 Welcome to my Connection Pool Library. This project demonstrates my own implementation of a database connection pool in Java.
-The connection pool manages multiple database connections, optimizing their usage and improving application performance.
+Watch the [Performance Test Video](https://www.youtube.com/watch?v=FgS-QVvKML4) to see the implementation in action.
+
+ The connection pool manages multiple database connections, optimizing their usage and improving application performance.
 
 
 ## Project Structure
