@@ -13,7 +13,7 @@ public class DatabaseConnection {
     private String DATABASE;
     private  int PORT_NUMBER;
     private  String URL;
-    private static Connection connection;
+    private Connection connection;
     public DatabaseConnection(String USER, String PASSWORD, String DATABASE, int PORT_NUMBER) {
         this.USER = USER;
         this.PASSWORD = PASSWORD;

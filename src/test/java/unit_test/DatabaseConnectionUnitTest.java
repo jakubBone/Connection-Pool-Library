@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class DatabaseConnectionUnitTest {
-    static DatabaseConnection dbConnection;
+    DatabaseConnection dbConnection;
     Connection connection;
     @BeforeEach
     void setUp(){
@@ -18,7 +18,7 @@ class DatabaseConnectionUnitTest {
     }
 
     @AfterAll
-    static void closeDown() {
+    void closeDown() {
         dbConnection.disconnect();
     }
 
