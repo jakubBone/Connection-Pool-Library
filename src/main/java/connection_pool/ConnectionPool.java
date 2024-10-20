@@ -77,33 +77,6 @@ public class ConnectionPool {
             throw new SQLException("Failed to acquire a connection: {} ", ex.getMessage());
         }
     }
-    /*public Connection getConnection() throws SQLException {
-        try {
-            semaphore.acquire();
-            lock.lock();
-            try {
-                for (Connection conn: pool) {
-                    if (!conn.isClosed()) {
-                        pool.remove(conn);
-                        System.out.println(Thread.currentThread() + " got a connection from the POOL");
-                        return conn;
-                    }
-                }
-                if (pool.size() < maxPoolSize) {
-                    Connection newConn = dbConnection.getConnection();
-                    pool.add(newConn);
-                    System.out.println(Thread.currentThread() + " added a new connection from the POOL");
-                    return newConn;
-                } else {
-                    throw new SQLException("No available connections");
-                }
-            } finally {
-                lock.unlock();
-            }
-        } catch (InterruptedException ex) {
-            throw new SQLException("Failed to acquire a connection: {} ", ex.getMessage());
-        }
-    }*/
 
     public void releaseConnection(Connection conn) throws SQLException {
         lock.lock();
