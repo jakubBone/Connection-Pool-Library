@@ -17,7 +17,7 @@ class DatabaseConnectionUnitTest {
         dbConnection = new DatabaseConnection("user_manager", "user123", "user_db", 5432);
     }
 
-    @AfterAll
+    @AfterEach
     void closeDown() {
         dbConnection.disconnect();
     }

@@ -41,10 +41,10 @@ public class ConnectionPool {
         try {
             for (int i = 0; i < minPoolSize; i++) {
                 pool.add(dbConnection.getConnection());
-                System.out.println("A new connection added to POOL");
+                log.info("A new connection added to POOL. Current pool size: {}", pool.size());
             }
         } catch (SQLException ex) {
-            System.out.println("Error initializing connection POOL");
+            log.error("Error initializing connection POOL: {}", ex.getMessage(), ex);
         } finally {
             lock.unlock();
         }
@@ -58,23 +58,27 @@ public class ConnectionPool {
                 for (Connection conn: pool) {
                     if (!conn.isClosed()) {
                         pool.remove(conn);
-                        System.out.println(Thread.currentThread() + " got a connection from the POOL");
+                        log.info("Thread {} got a connection from the POOL. Pool size: {}",
+                                Thread.currentThread().getName(), pool.size());
                         return conn;
                     }
                 }
                 if (pool.size() < maxPoolSize) {
-                    Connection newConn = new DatabaseConnection().getConnection();
+                    Connection newConn = dbConnection.getConnection();
                     pool.add(newConn);
-                    System.out.println(Thread.currentThread() + " added a new connection from the POOL");
+                    log.info("Thread {} added a new connection to the POOL. Pool size: {}",
+                            Thread.currentThread().getName(), pool.size());
                     return newConn;
                 } else {
+                    log.warn("No available connections. Maximum pool size reached.");
                     throw new SQLException("No available connections");
                 }
             } finally {
                 lock.unlock();
             }
         } catch (InterruptedException ex) {
-            throw new SQLException("Failed to acquire a connection: {} ", ex.getMessage());
+            log.error("Failed to acquire a connection: {}", ex.getMessage(), ex);
+            throw new SQLException("Failed to acquire a connection: " + ex.getMessage(), ex);
         }
     }
 
@@ -83,20 +87,24 @@ public class ConnectionPool {
         try {
             if (!conn.isClosed()) {
                 pool.add(conn);
-                System.out.println(Thread.currentThread() + " returned the connection to the POOL");
+                log.info("Thread {} returned the connection to the POOL. Pool size: {}",
+                        Thread.currentThread().getName(), pool.size());
                 semaphore.release();
             } else {
                 pool.remove(conn);
-                System.out.println("Connection with error removed from POOL");
+                log.warn("Closed connection detected and removed from POOL. Pool size: {}", pool.size());
                 if (pool.size() < minPoolSize) {
                     pool.add(dbConnection.getConnection());
+                    log.info("New connection added to POOL to maintain minimum pool size. Pool size: {}", pool.size());
                 }
             }
         } catch (SQLException ex) {
             pool.remove(conn);
-            System.out.println("Connection with error removed from POOL");
+            log.error("Error occurred while releasing connection: {}", ex.getMessage(), ex);
             if (pool.size() < minPoolSize) {
                 pool.add(dbConnection.getConnection());
+                log.info("New connection added to POOL after error. Pool size: {}", pool.size());
+
             }
         } finally {
             lock.unlock();
@@ -104,13 +112,14 @@ public class ConnectionPool {
     }
 
     public void startCleanupScheduler()  {
-        System.out.println("Scheduler started");
+        log.info("Scheduler for cleaning idle connections started");
         scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(() -> {
             try {
                 removeIdleConnection();
             } catch (Exception ex) {
-                System.out.println("Failed to remove connection: " + ex.getMessage());
+                log.error("Failed to remove idle connection: {}", ex.getMessage(), ex);
+
             }
         }, 0, 1, TimeUnit.MINUTES);
     }
@@ -121,7 +130,7 @@ public class ConnectionPool {
             for (Connection conn: pool) {
                 if (conn.isClosed() && pool.size() > minPoolSize) {
                     pool.remove(conn);
-                    System.out.println(Thread.currentThread() + " removed the idle connection from POOL");
+                    log.info("Removed idle connection from POOL. Pool size: {}", pool.size());
                 }
             }
         } finally {
@@ -132,12 +141,16 @@ public class ConnectionPool {
     public void stopCleanupScheduler() throws InterruptedException {
         if (scheduler != null && !scheduler.isShutdown()) {
             scheduler.shutdown();
+            log.info("Scheduler shutting down");
             try {
                 if (!scheduler.awaitTermination(10, TimeUnit.SECONDS)) {
                     scheduler.shutdownNow();
+                    log.warn("Scheduler forced shutdown");
+                } else {
+                    log.info("Scheduler terminated successfully");
                 }
             } catch (InterruptedException ex) {
-                System.out.println("Scheduler shut down");
+                log.error("Error shutting down scheduler: {}", ex.getMessage(), ex);
                 scheduler.shutdownNow();
             }
         }

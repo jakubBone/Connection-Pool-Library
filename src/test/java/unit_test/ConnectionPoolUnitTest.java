@@ -14,7 +14,6 @@ class ConnectionPoolUnitTest {
     ConnectionPool pool;
     int minPoolSize = 10;
     int maxPoolSize = 100;
-
     DatabaseConnection dbConnection;
 
     @BeforeEach

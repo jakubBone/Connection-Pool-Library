@@ -25,13 +25,16 @@ public class DatabaseConnection {
     public Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
             try {
-                log.info("Attempting to connect to the database");
+                log.info("Attempting to connect to the database '{}' on port {} with user '{}'", DATABASE, PORT_NUMBER, USER);
                 connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                log.info("Connection established with {} on port {}", DATABASE, PORT_NUMBER);
+                log.info("Connection established successfully with database '{}' on port {}", DATABASE, PORT_NUMBER);
             } catch (SQLException ex) {
-                log.error("Error during database connection: {}", ex.getMessage());
+                log.error("Failed to establish connection to the database '{}'. Error: {}", DATABASE, ex.getMessage(), ex);
                 throw ex;
             }
+        } else {
+            log.info("Reusing existing connection to the database '{}'", DATABASE);
+
         }
         return connection;
     }
@@ -40,10 +43,13 @@ public class DatabaseConnection {
         try {
             if (connection != null) {
                 connection.close();
-                log.info("Database disconnected");
+                log.info("Successfully disconnected from the database '{}'", DATABASE);
+            } else {
+                log.warn("Tried to disconnect, but connection was already closed or null for the database '{}'", DATABASE);
+
             }
         } catch(SQLException ex){
-            log.error("Error during database disconnection: {}", ex.getMessage());
+            log.error("Error during disconnection from database '{}'. Error: {}", DATABASE, ex.getMessage(), ex);
         }
     }
 }
