@@ -69,6 +69,4 @@ class ConnectionPoolUnitTest {
 
         assertTrue(pool.getPool().contains(conn));
     }
-
-
 }

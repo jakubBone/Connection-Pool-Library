@@ -8,32 +8,32 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class DatabaseConnection {
-    private String USER;
-    private String PASSWORD;
-    private String DATABASE;
-    private  int PORT_NUMBER;
-    private  String URL;
+    private String user;
+    private String password;
+    private String database;
+    private int port;
+    private String URL;
     private Connection connection;
-    public DatabaseConnection(String USER, String PASSWORD, String DATABASE, int PORT_NUMBER) {
-        this.USER = USER;
-        this.PASSWORD = PASSWORD;
-        this.DATABASE = DATABASE;
-        this.PORT_NUMBER = PORT_NUMBER;
-        this.URL = String.format("jdbc:postgresql://localhost:%d/%s", PORT_NUMBER, DATABASE);;
+    public DatabaseConnection(String user, String password, String database, int port) {
+        this.user = user;
+        this.password = password;
+        this.database = database;
+        this.port = port;
+        this.URL = String.format("jdbc:postgresql://localhost:%d/%s", port, database);;
     }
 
     public Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
             try {
-                log.info("Attempting to connect to the database '{}' on port {} with user '{}'", DATABASE, PORT_NUMBER, USER);
-                connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                log.info("Connection established successfully with database '{}' on port {}", DATABASE, PORT_NUMBER);
+                log.info("Attempting to connect to the database '{}' on port {} with user '{}'", database, port, user);
+                connection = DriverManager.getConnection(URL, user, password);
+                log.info("Connection established successfully with database '{}' on port {}", database, port);
             } catch (SQLException ex) {
-                log.error("Failed to establish connection to the database '{}'. Error: {}", DATABASE, ex.getMessage(), ex);
+                log.error("Failed to establish connection to the database '{}'. Error: {}", database, ex.getMessage(), ex);
                 throw ex;
             }
         } else {
-            log.info("Reusing existing connection to the database '{}'", DATABASE);
+            log.info("Reusing existing connection to the database '{}'", database);
 
         }
         return connection;
@@ -43,13 +43,13 @@ public class DatabaseConnection {
         try {
             if (connection != null) {
                 connection.close();
-                log.info("Successfully disconnected from the database '{}'", DATABASE);
+                log.info("Successfully disconnected from the database '{}'", database);
             } else {
-                log.warn("Tried to disconnect, but connection was already closed or null for the database '{}'", DATABASE);
+                log.warn("Tried to disconnect, but connection was already closed or null for the database '{}'", database);
 
             }
         } catch(SQLException ex){
-            log.error("Error during disconnection from database '{}'. Error: {}", DATABASE, ex.getMessage(), ex);
+            log.error("Error during disconnection from database '{}'. Error: {}", database, ex.getMessage(), ex);
         }
     }
 }
