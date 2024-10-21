@@ -65,12 +65,17 @@ public class ConnectionPool {
                 }
                 if (pool.size() < maxPoolSize) {
                     Connection newConn = dbConnection.getConnection();
-                    pool.add(newConn);
-                    log.info("Thread {} added a new connection to the POOL. Pool size: {}",
-                            Thread.currentThread().getName(), pool.size());
-                    return newConn;
+                    if(!pool.contains(newConn)){
+                        pool.add(newConn);
+                        log.info("Thread {} added a new connection to the POOL. Pool size: {}",
+                                Thread.currentThread().getName(), pool.size());
+                        return newConn;
+                    } else {
+                        log.warn("Attempted to add a duplicate connection to the POOL");
+                        throw new SQLException("Duplicate connection detected");
+                    }
                 } else {
-                    log.warn("No available connections. Maximum pool size reached.");
+                    log.warn("No available connections. Maximum pool size reached");
                     throw new SQLException("No available connections");
                 }
             } finally {
