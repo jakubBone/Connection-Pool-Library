@@ -1,4 +1,5 @@
 # 🏗️ Connection-Pool Library
+![logo](https://github.com/user-attachments/assets/1a14ee27-2dcd-4644-8484-c922b6d7a878)
 
 !(https://github.com\jakubBone\Connection-Pool-Library\src\main\resources)
 
