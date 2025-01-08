@@ -1,72 +1,137 @@
-# Connection-Pool Library
+🏗️ Connection-Pool Library
 
-Welcome to my Connection Pool Library. This project demonstrates my own implementation of a database connection pool in Java.
+The Connection-Pool library is a lightweight and efficient Java solution for managing database connection pools. 
+Designed as an alternative to ready-made solutions, this project aims to provide an in-depth understanding of 
+connection management and its challenges in multi-threaded environments.
 
 Watch the [Performance Test Video](https://www.youtube.com/watch?v=FgS-QVvKML4) to see the implementation in action.
 
-The connection pool manages multiple database connections, optimizing their usage and improving application performance.
+
+## 🎯 Features
+
+- **Automatic Pool Initialization**: Creates a minimum number of connections at startup
+
+- **Maximum Connection Limit**: Caps the number of concurrent connections to a configured maximum
+
+- **Multithreading Support**: Handles multiple connection requests concurrently
+
+- **Idle Connection Cleanup**: Automatically removes unused connections beyond the minimum limit
 
 
-## Project Structure
-The project is divided into several key components:
+## 🚀 Technologies Used
 
-The project is divided into several key components:
+- **Java 21**: Core programming language 
 
-ConnectionPool: Manages database connections, maintaining a minimum and maximum number of connections in the pool.
+- **JDBC**: Interface for managing database connections
 
-DatabaseConnection: Facilitates establishing connections to the database.
+- **JUnit**: Framework for testing
 
-
-## Project Overview
-The library provides a robust mechanism for managing database connections, ensuring efficient use of resources and maintaining optimal performance.
-Key features include:
-
-Connection Initialization: Initializes a pool of database connections at application startup.
-
-Connection Allocation: Manages the allocation and deallocation of connections based on demand, ensuring that the number of active connections remains within defined limits.
-
-Error Handling: Handles connection errors by removing faulty connections and replacing them with new ones if needed.
-
-Idle Connection Management: Regularly checks and removes idle connections that exceed the minimum pool size, freeing up resources.
-
-Concurrency Control: Utilizes semaphores and locks to ensure thread-safe access to connections.
+- **Gradle**: Build automation and dependency management
 
 
-## Testing
-The project includes unit and performance tests to validate functionality and efficiency:
+## 📂 Project Structure
 
-Unit Tests: Verify basic operations of ConnectionPool and DatabaseConnection.
-
-Performance Tests: Test stability and performance under load using multiple connection strategies.
-
-
-## How to Use
-
-### Step 1: Set Up the Database Connection:
-Before using the ConnectionPool, create an instance of the DatabaseConnection class by providing your database credentials:
-> DatabaseConnection dbConnection = new DatabaseConnection("username", "password", "database_name", port_number);
-
-### Step 2: Create a Connection Pool:
-Initialize ConnectionPool by specifying the minimum and maximum number of connections and passing the DatabaseConnection instance.
-
-### Step 3: Acquire and Use a Connection:
-Use getConnection() to retrieve a connection, then perform your database operations.
-
-### Step 4: Release the Connection:
-Call releaseConnection() to return the connection back to the pool.
-
-### Step 5: Start and Stop Scheduler (Optional):
-Use startCleanupScheduler() to manage idle connections, and stopCleanupScheduler() to gracefully stop it.
-
-### Step 6: Disconnect
-When finished, call disconnect() on the DatabaseConnection instance.
+```
+src
+├── connection_pool             # Connection pool management logic
+├── database                    # Database connection handling
+├── performance_test            # Performance testing utilities
+├── unit_test                   # Unit testing classes
+└── utils                       # Utility tools and configurations
+``` 
 
 
-## Requirements
-Java Development Kit (JDK) for compiling and running the application.
+## 🚀 Getting Started
 
-PostgreSQL Database for testing and running the application.
+Follow these steps to set up and run the project:
 
-Log4j2 for logging application behavior.
+### Prerequisites
 
-JUnit for unit testing.
+Before you begin, ensure you have the following tools installed:
+- **Java Development Kit (JDK)** 21 or higher
+- **Gradle** for dependency management
+- **PostgreSQL** database
+
+### Setup Instructions
+
+1. **Clone the Repository**  
+   Download the project files to your local machine:
+   ```bash
+   git clone https://github.com/user/Connection-Pool-Library.git
+  cd Connection-Pool
+
+2. **Configure the Database**  
+   Set up a PostgreSQL database:
+   - Create a database
+   - Update the credentials in DatabaseConnection.java:
+   - Update the database credentials in the `DatabaseConnection.java` file located at:
+     `src/com/jakub/bone/database/AirportDatabase.java`
+     Replace the placeholders with your database credentials:
+     ```java
+     private String user = "your_user";
+     private String password = "your_password"
+
+3. **Build the Project**   
+   Use Gradle to build the project:
+   ```bash
+   ./gradlew build
+
+## 🛠️ Usage Example
+
+```java
+     private String user = "your_user";
+     private String password = "your_password"
+DatabaseConnection dbConnection = new DatabaseConnection("user", "password", "database", 5432);
+ConnectionPool pool = new ConnectionPool(10, 100, dbConnection);
+
+// Acquire a connection
+Connection conn = pool.getConnection();
+
+// Execute queries
+try (Statement stmt = conn.createStatement()) {
+    stmt.executeUpdate("INSERT INTO test_table (data) VALUES ('example');");
+}
+
+// Release the connection
+pool.releaseConnection(conn);
+```
+
+## 🧪 Testing
+
+###The library includes comprehensive tests that validate:
+
+- Performance under query execution
+- Stability under high loads
+- Proper connection lifecycle management
+
+## 💡 About This Project
+
+This project was developed as an alternative to ready-made solutions, aiming to deepen the understanding
+of connection management. It explores the principles of connection pooling, the challenges of resource optimization,
+and the intricacies of handling database connections in multi-threaded environments.
+
+## 📧 Contact
+
+If you have any questions, feedback, or suggestions, feel free to reach out to me:
+
+- **Email**: [jakub.bone1990@gmail.com](mailto:jakub.bone1990@gmail,com)
+- **Blog**: [javamPokaze.pl](https://javampokaze.pl)  
+- **LinkedIn**: [Jakub Bone](https://www.linkedin.com/in/jakub-bone)  
+
+Let's connect and discuss this project further! 🚀
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
