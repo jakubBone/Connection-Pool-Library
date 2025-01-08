@@ -24,6 +24,18 @@ dependencies {
     implementation 'org.postgresql:postgresql:42.5.0'
 }
 
+jar {
+    manifest {
+        attributes(
+                'Implementation-Title': 'Connection Pool',
+                'Implementation-Version': version,
+                'Main-Class': 'connection_pool.ConnectionPool' // jeśli chcesz ustawić klasę startową
+        )
+    }
+}
+
+
+
 
 test {
     useJUnitPlatform()
