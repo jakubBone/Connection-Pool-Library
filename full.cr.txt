@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import database.DatabaseConnection;
+import data.DatabaseConnection;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
@@ -148,7 +148,7 @@ public class ConnectionPool {
 ====================
 FILE: DatabaseConnection.java
 
-package database;
+package data;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -168,11 +168,11 @@ public class DatabaseConnection {
     public Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
             try {
-                log.info("Attempting to connect to the database");
+                log.info("Attempting to connect to the data");
                 connection = DriverManager.getConnection(URL, USER, PASSWORD);
                 log.info("Connection established with {} on port {}", DATABASE, PORT_NUMBER);
             } catch (SQLException ex) {
-                log.error("Error during database connection: {}", ex.getMessage());
+                log.error("Error during data connection: {}", ex.getMessage());
                 throw ex;
             }
         }
@@ -186,7 +186,7 @@ public class DatabaseConnection {
                 log.info("Database disconnected");
             }
         } catch(SQLException ex){
-            log.error("Error during database disconnection: {}", ex.getMessage());
+            log.error("Error during data disconnection: {}", ex.getMessage());
         }
     }
 }
@@ -213,7 +213,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * The ConnectionPoolTest is designed to test the performance and stability of the connection pool.
- * Its primary purpose is to simulate a large number of concurrent database operations using a specified number
+ * Its primary purpose is to simulate a large number of concurrent data operations using a specified number
  * of connections from the pool.
  *
  * This class demonstrates the ability of the connection pool to handle simultaneous queries and manage
@@ -239,13 +239,13 @@ class ConnectionPoolPerformanceTest {
     }
 
     @Test
-    @DisplayName("Should handle multiple concurrent database operations with connection pool")
+    @DisplayName("Should handle multiple concurrent data operations with connection pool")
     void shouldHandleConcurrentDatabaseOperations() throws InterruptedException {
         // Create task for concurrent performing
         Runnable task = createTask(connectionPool);
         ExecutorService executor = Executors.newFixedThreadPool(threadsNumber);
 
-        // Each thread perform operation on the database
+        // Each thread perform operation on the data
         for (int i = 0; i < threadsNumber; i++) {
             executor.submit(task);
         }
@@ -303,7 +303,7 @@ FILE: DatabasePerformanceTest.java
 
 package performance_test;
 
-import database.DatabaseConnection;
+import data.DatabaseConnection;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -318,7 +318,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 2. Using a single connection to execute all queries
  *
  * This class demonstrates the significant performance impact of repeatedly opening and closing
- * database connections versus reusing a single connection.
+ * data connections versus reusing a single connection.
  */
 
 class DatabasePerformanceTest {
@@ -467,7 +467,7 @@ FILE: DatabaseConnectionUnitTest.java
 
 package unit_test;
 
-import database.DatabaseConnection;
+import data.DatabaseConnection;
 import org.junit.jupiter.api.*;
 
 import java.sql.Connection;

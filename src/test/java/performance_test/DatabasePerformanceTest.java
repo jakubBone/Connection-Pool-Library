@@ -1,6 +1,6 @@
 package performance_test;
 
-import database.DatabaseConnection;
+import data.DatabaseConnection;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

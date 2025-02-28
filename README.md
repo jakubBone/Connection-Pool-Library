@@ -1,7 +1,7 @@
 # 🏗️ Connection-Pool Library
 ![logo](https://github.com/user-attachments/assets/1a14ee27-2dcd-4644-8484-c922b6d7a878)
 
-The Connection-Pool library is a lightweight and efficient Java solution for managing database connection pools. 
+The Connection-Pool library is a lightweight and efficient Java solution for managing data connection pools. 
 Designed as an alternative to ready-made solutions, this project aims to provide an in-depth understanding of 
 connection management and its challenges in multi-threaded environments.
 
@@ -23,7 +23,7 @@ Watch the [Performance Test Video](https://www.youtube.com/watch?v=FgS-QVvKML4) 
 
 - **Java 21**: Core programming language 
 
-- **JDBC**: Interface for managing database connections
+- **JDBC**: Interface for managing data connections
 
 - **JUnit**: Framework for testing
 
@@ -33,12 +33,15 @@ Watch the [Performance Test Video](https://www.youtube.com/watch?v=FgS-QVvKML4) 
 ## 📂 Project Structure
 
 ```
-src
-├── connection_pool             # Connection pool management logic
-├── database                    # Database connection handling
-├── performance_test            # Performance testing utilities
-├── unit_test                   # Unit testing classes
-└── utils                       # Utility tools and configurations
+.
+├── src
+│   ├── main
+│   │   └── java
+│   │       ├── connection_pool          # Connection pool management logic
+│   │       └── data                     # Database connection handling                               
+│   └── test                                       # Unit & performance tests
+├── build.gradle                                   # Build configuration
+└── ...  
 ``` 
 
 
@@ -51,7 +54,7 @@ Follow these steps to set up and run the project:
 Before you begin, ensure you have the following tools installed:
 - **Java Development Kit (JDK)** 21 or higher
 - **Gradle** for dependency management
-- **PostgreSQL** database
+- **PostgreSQL** data
 
 ### Setup Instructions
 
@@ -62,12 +65,12 @@ Before you begin, ensure you have the following tools installed:
   cd Connection-Pool
 
 2. **Configure the Database**  
-   Set up a PostgreSQL database:
-   - Create a database
+   Set up a PostgreSQL data:
+   - Create a data
    - Update the credentials in DatabaseConnection.java:
-   - Update the database credentials in the `DatabaseConnection.java` file located at:
-     `src/com/jakub/bone/database/AirportDatabase.java`
-     Replace the placeholders with your database credentials:
+   - Update the data credentials in the `DatabaseConnection.java` file located at:
+     `src/com/jakub/bone/data/AirportDatabase.java`
+     Replace the placeholders with your data credentials:
      ```java
      private String user = "your_user";
      private String password = "your_password"
@@ -82,7 +85,7 @@ Before you begin, ensure you have the following tools installed:
 ```java
      private String user = "your_user";
      private String password = "your_password"
-DatabaseConnection dbConnection = new DatabaseConnection("user", "password", "database", 5432);
+DatabaseConnection dbConnection = new DatabaseConnection("user", "password", "data", 5432);
 ConnectionPool pool = new ConnectionPool(10, 100, dbConnection);
 
 // Acquire a connection
@@ -109,7 +112,7 @@ pool.releaseConnection(conn);
 
 This project was developed as an alternative to ready-made solutions, aiming to deepen the understanding
 of connection management. It explores the principles of connection pooling, the challenges of resource optimization,
-and the intricacies of handling database connections in multi-threaded environments.
+and the intricacies of handling data connections in multi-threaded environments.
 
 ## 📧 Contact
 

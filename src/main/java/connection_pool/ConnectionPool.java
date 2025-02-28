@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import database.DatabaseConnection;
+import data.DatabaseConnection;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 

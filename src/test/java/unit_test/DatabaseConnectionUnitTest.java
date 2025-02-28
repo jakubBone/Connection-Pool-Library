@@ -1,6 +1,6 @@
 package unit_test;
 
-import database.DatabaseConnection;
+import data.DatabaseConnection;
 import org.junit.jupiter.api.*;
 
 import java.sql.Connection;

@@ -1,7 +1,7 @@
 package performance_test;
 
 import connection_pool.ConnectionPool;
-import database.DatabaseConnection;
+import data.DatabaseConnection;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
