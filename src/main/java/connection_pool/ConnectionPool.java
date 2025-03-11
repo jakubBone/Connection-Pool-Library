@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import data.DatabaseConnection;
+import data.DatabaseSource;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
@@ -20,13 +20,15 @@ import lombok.extern.log4j.Log4j2;
 public class ConnectionPool {
     private final int minPoolSize;
     private final int maxPoolSize;
-    private List<Connection> pool;
-    private Semaphore semaphore;
-    private Lock lock;
+    private final List<Connection> pool;
+    // Semaphore to limit the number of concurrent connection acquisitions
+    private final Semaphore semaphore;
+    private final Lock lock;
+    // Scheduler for periodically cleaning up idle connections
     private ScheduledExecutorService scheduler;
-    private DatabaseConnection dbConnection;
+    private final DatabaseSource dbConnection;
 
-    public ConnectionPool(int minPoolSize, int maxPoolSize, DatabaseConnection dbConnection) {
+    public ConnectionPool(int minPoolSize, int maxPoolSize, DatabaseSource dbConnection) {
         this.minPoolSize = minPoolSize;
         this.maxPoolSize = maxPoolSize;
         this.pool = new ArrayList<>();
@@ -52,9 +54,11 @@ public class ConnectionPool {
 
     public Connection getConnection() throws SQLException {
         try {
-            semaphore.acquire();
+            //
+            semaphore.acquire(); // Acquire a permit to ensure we don't exceed maxPoolSize
             lock.lock();
             try {
+                // Iterate over the pool to find an available (non-closed) connection
                 for (Connection conn: pool) {
                     if (!conn.isClosed()) {
                         pool.remove(conn);
@@ -63,6 +67,8 @@ public class ConnectionPool {
                         return conn;
                     }
                 }
+
+                // If no valid connection is found and the pool size is less than maxPoolSize, create a new one
                 if (pool.size() < maxPoolSize) {
                     Connection newConn = dbConnection.getConnection();
                     if(!pool.contains(newConn)){
@@ -87,6 +93,7 @@ public class ConnectionPool {
         }
     }
 
+    // Returns a connection back to the pool after use
     public void releaseConnection(Connection conn) throws SQLException {
         lock.lock();
         try {
@@ -94,7 +101,7 @@ public class ConnectionPool {
                 pool.add(conn);
                 log.info("Thread {} returned the connection to the POOL. Pool size: {}",
                         Thread.currentThread().getName(), pool.size());
-                semaphore.release();
+                semaphore.release(); // Release the semaphore permit to signal available connection
             } else {
                 pool.remove(conn);
                 log.warn("Closed connection detected and removed from POOL. Pool size: {}", pool.size());
@@ -116,11 +123,13 @@ public class ConnectionPool {
         }
     }
 
+    // Starts the scheduler that periodically cleans up idle connections
     public void startCleanupScheduler()  {
-        log.info("Scheduler for cleaning idle connections started");
         scheduler = Executors.newScheduledThreadPool(1);
+        // Schedule the cleanup task to run every minute
         scheduler.scheduleAtFixedRate(() -> {
             try {
+                log.info("Scheduler is cleaning idle connections");
                 removeIdleConnection();
             } catch (Exception ex) {
                 log.error("Failed to remove idle connection: {}", ex.getMessage(), ex);
@@ -132,6 +141,7 @@ public class ConnectionPool {
     private void removeIdleConnection() throws SQLException {
         lock.lock();
         try {
+            // Iterate through the pool and remove closed connections if pool size exceeds the minimum
             for (Connection conn: pool) {
                 if (conn.isClosed() && pool.size() > minPoolSize) {
                     pool.remove(conn);
@@ -143,11 +153,13 @@ public class ConnectionPool {
         }
     }
 
+    // Stops the cleanup scheduler in an orderly manner
     public void stopCleanupScheduler() throws InterruptedException {
         if (scheduler != null && !scheduler.isShutdown()) {
             scheduler.shutdown();
             log.info("Scheduler shutting down");
             try {
+                // Wait for existing tasks to finish for up to 10 seconds
                 if (!scheduler.awaitTermination(10, TimeUnit.SECONDS)) {
                     scheduler.shutdownNow();
                     log.warn("Scheduler forced shutdown");

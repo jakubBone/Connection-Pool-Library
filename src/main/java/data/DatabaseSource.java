@@ -7,14 +7,15 @@ import java.sql.SQLException;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
-public class DatabaseConnection {
-    private String user;
-    private String password;
-    private String database;
-    private int port;
-    private String URL;
+public class DatabaseSource {
+    private final String user;
+    private final String password;
+    private final String database;
+    private final int port;
+    private final String URL;
     private Connection connection;
-    public DatabaseConnection(String user, String password, String database, int port) {
+
+    public DatabaseSource(String user, String password, String database, int port) {
         this.user = user;
         this.password = password;
         this.database = database;

@@ -1,6 +1,6 @@
 package unit_test;
 
-import data.DatabaseConnection;
+import data.DatabaseSource;
 import org.junit.jupiter.api.*;
 
 import java.sql.Connection;
@@ -9,12 +9,12 @@ import java.sql.SQLException;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class DatabaseConnectionUnitTest {
-    DatabaseConnection dbConnection;
+class DatabaseSourceUnitTest {
+    DatabaseSource dbConnection;
     Connection connection;
     @BeforeEach
     void setUp(){
-        dbConnection = new DatabaseConnection("user_manager", "user123", "user_db", 5432);
+        dbConnection = new DatabaseSource("user_manager", "user123", "user_db", 5432);
     }
 
     @AfterEach

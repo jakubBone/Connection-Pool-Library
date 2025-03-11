@@ -1,7 +1,7 @@
 package unit_test;
 
 import connection_pool.ConnectionPool;
-import data.DatabaseConnection;
+import data.DatabaseSource;
 import org.junit.jupiter.api.*;
 
 import java.sql.Connection;
@@ -14,11 +14,11 @@ class ConnectionPoolUnitTest {
     ConnectionPool pool;
     int minPoolSize = 10;
     int maxPoolSize = 100;
-    DatabaseConnection dbConnection;
+    DatabaseSource dbConnection;
 
     @BeforeEach
     void setUp(){
-        dbConnection = new DatabaseConnection("user_manager", "user123", "user_db", 5432);
+        dbConnection = new DatabaseSource("user_manager", "user123", "user_db", 5432);
         pool = new ConnectionPool(minPoolSize, maxPoolSize, dbConnection);
     }
 

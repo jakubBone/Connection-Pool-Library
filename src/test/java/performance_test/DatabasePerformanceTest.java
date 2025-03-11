@@ -1,6 +1,6 @@
 package performance_test;
 
-import data.DatabaseConnection;
+import data.DatabaseSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -45,7 +45,7 @@ class DatabasePerformanceTest {
 
         for (int i = 0; i < operationNumber; i++) {
             try {
-                DatabaseConnection dbConnection = new DatabaseConnection("user_manager", "user123", "user_db", 5432);
+                DatabaseSource dbConnection = new DatabaseSource("user_manager", "user123", "user_db", 5432);
                 updateTable(dbConnection.getConnection(), query);
                 dbConnection.disconnect();
             } catch (SQLException e) {
@@ -60,7 +60,7 @@ class DatabasePerformanceTest {
     // Executes the test with a single connection for all operations
     long executeTestWithMultipleConnections(String query)  {
         long start = System.currentTimeMillis();
-        DatabaseConnection dbConnection = new DatabaseConnection("user_manager", "user123", "user_db", 5432);
+        DatabaseSource dbConnection = new DatabaseSource("user_manager", "user123", "user_db", 5432);
 
         for (int i = 0; i < operationNumber; i++) {
              try {
