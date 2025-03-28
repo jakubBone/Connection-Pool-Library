@@ -5,7 +5,7 @@ The Connection-Pool library is a lightweight and efficient Java solution for man
 Designed as an alternative to ready-made solutions, this project aims to provide an in-depth understanding of 
 connection management and its challenges in multi-threaded environments.
 
-Watch the [Performance Test Video](https://www.youtube.com/watch?v=FgS-QVvKML4) to see the implementation in action.
+Watch the [Stress Test Video](https://www.youtube.com/watch?v=HYUYge7koJs) to see the implementation in action.
 
 
 ## 🎯 Features
